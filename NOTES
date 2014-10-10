@@ -1,0 +1,23 @@
+Coaching relations form undirected (can get infected both ways) graphs. When any node gets infected, every node connected to that graph must also be infected. 
+  - implies that if all users were connected, there is no way to infect only a subset
+
+A user should store 
+  - version number
+  - list of coachees
+  - list of coaches  (these two could be combined but may as well separate them in case we want to redefine the infection relation) 
+  - list of IDs and actual user-objects retrieved lazily b/c cant load all users into memory 
+   - have an interface for getting a user-object to easily switch out where user info is stored (db v. web v. hd) 
+
+Total Infection
+flood-fill
+
+Limited Infection
+need some way to count size of a connected component
+     - give each connected component an ID, like a group, and store the size of all groups. 
+            - each person in that component stores that group ID
+            - when a person joins a component, they get the group ID
+            - when two components merge, either
+                   1. one of the components takes on the ID of the other
+                   2. a mapping table that makes ID2 == ID1 when filling 
+
+Can use knapsack algorithm to choose which groups to reach target 
