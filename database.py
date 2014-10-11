@@ -31,31 +31,36 @@ class Database:
         # you add/remove user(s) from a connected component or link/merge
         # two together
         self.sizes = { 'group_1': 4,
-                       'group_2': 2 }
+                       'group_2': 2,
+                       'group_3': 1,
+                       'group_4': 1 }
         
         # this could be an interface to an actual database (SQL, NoSQL etc)
         # or to a web store, or just a file on the hard drive
         # for retrieving users that haven't already been retrieved and cached
         # for testing purposes, I won't be using this
         self.database = None
-
+        
         # maintain a cache of users that have already been retrieved 
-        # for testing purposes, all users will already be cached
+        # for testing purposes, this is already hardcoded
         self.user_cache = { '1': User('1', 0, 'group_1', [], ['2', '3']),
                             '2': User('2', 0, 'group_1', ['1'], []),
                             '3': User('3', 0, 'group_1', ['1'], ['4']),
                             '4': User('4', 0, 'group_1', ['3'], []),
                             '5': User('5', 0, 'group_2', ['6'], []),
-                            '6': User('6', 0, 'group_3', [], ['5']) }
+                            '6': User('6', 0, 'group_2', [], ['5']),
+                            '7': User('7', 0, 'group_3', [], []),
+                            '8': User('8', 0, 'group_4', [], []) }
 
     def get_user(self, user_id):
         if user_id in self.user_cache:
             return self.user_cache[user_id]
         
-        # not used for my testing purposes but the general gist of
-        # how self.user_cache and self.database are intended to be used
+        # not used for my testing purposes and not implemented 
+        # but the general gist of how self.user_cache and self.database 
+        # are intended to be used
         try:
-            user = self.database.retrieve(user_id)
+            user = self.database.retrieve(uid=user_id)
             # cache it
             self.user_cache[user_id] = user
             return user
@@ -65,6 +70,26 @@ class Database:
     def update_user_ver(self, user_id, new_ver):
         self.user_cache[user_id].version = new_ver
         # would also need to propogate the changes to the database 
+        
+    def find_one_in(self, group_id):
+        """
+        Return a user with group_id == @group_id
+        """
+        # first try to find a user in cache is in the group
+        for user in self.user_cache.values():
+            if user.group_id == group_id:
+                return user
+                
+        # otherwise hope self.database has an efficient way to search 
+        # by attribute
+        try:
+            # not used for my testing purposes and not actually implemented
+            # just the general intent
+            user = self.database.retrieve(gid=group_id)
+            self.user_cache[user.id] = user
+            return user
+        except:
+            raise Exception("No user in group: " + group_id)
         
     def __str__(self):
         s = ''
