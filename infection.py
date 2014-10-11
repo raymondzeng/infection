@@ -1,5 +1,3 @@
-from database import Database
-        
 def total_infection(db, patient_zero, new_version, infected_ids):
     """
     Update the version number for every user connected to patient_zero.
@@ -34,3 +32,9 @@ def total_infection(db, patient_zero, new_version, infected_ids):
         # fetch this user from some given database
         user = db.get_user(user_id)
         total_infection(db, user, new_version, infected_ids)
+
+def limited_infection(db, target, new_version):
+    """
+    Infect at most the target number of users with new_version.
+    """
+    pass
